@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Стили для светлой темы */
+        [data-bs-theme="light"] {
+            --bg-color: linear-gradient(135deg, #f5f5f0 0%, #faf8f3 50%, #f0ebe5 100%);
+            --text-color: #2c2c2c;
+            --header-bg: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #8B0000 100%);
+            --footer-bg: linear-gradient(135deg, #1a0000 0%, #3d0000 50%, #1a0000 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: #D4AF37;
+            --accent-gold: #D4AF37;
+        }
+        
+        /* Стили для тёмной темы */
+        [data-bs-theme="dark"] {
+            --bg-color: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1a0000 0%, #3d0000 50%, #5a0000 100%);
+            --footer-bg: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a1a 100%);
+            --card-bg: rgba(30, 30, 45, 0.95);
+            --card-border: #8B7355;
+            --accent-gold: #FFD700;
+        }
+        
+        body {
+            background: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        /* Тонкая текстура для светлой темы */
+        [data-bs-theme="light"] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(212, 175, 55, 0.02) 10px,
+                    rgba(212, 175, 55, 0.02) 20px
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Золотые искры для светлой темы (аналог звёзд) */
+        [data-bs-theme="light"] body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 25px 35px, rgba(212, 175, 55, 0.4), transparent),
+                radial-gradient(2px 2px at 65px 75px, rgba(255, 215, 0, 0.3), transparent),
+                radial-gradient(2px 2px at 55px 55px, rgba(212, 175, 55, 0.35), transparent),
+                radial-gradient(3px 3px at 135px 85px, rgba(255, 215, 0, 0.4), transparent),
+                radial-gradient(2px 2px at 95px 15px, rgba(212, 175, 55, 0.3), transparent),
+                radial-gradient(1px 1px at 150px 120px, rgba(255, 215, 0, 0.25), transparent),
+                radial-gradient(2px 2px at 180px 40px, rgba(212, 175, 55, 0.35), transparent);
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            animation: sparkle 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* Звёздное небо для тёмной темы */
+        [data-bs-theme="dark"] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #FFD700, transparent),
+                radial-gradient(2px 2px at 60px 70px, #FFD700, transparent),
+                radial-gradient(1px 1px at 50px 50px, #FFF, transparent),
+                radial-gradient(1px 1px at 130px 80px, #FFF, transparent),
+                radial-gradient(2px 2px at 90px 10px, #FFD700, transparent);
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            animation: twinkle 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.6;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.3; }
+        }
+        
+        h1, h2, h3, h4, h5, h6, p, div {
+            color: var(--text-color);
+        }
+        
+        .nav-scroller {
+            background: var(--header-bg) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border-top: 2px solid var(--accent-gold);
+            border-bottom: 2px solid var(--accent-gold);
+            position: relative;
+        }
+        
+        /* Тонкий блеск для светлой темы */
+        [data-bs-theme="light"] .nav-scroller::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+        
+        .nav-scroller .nav-link {
+            color: #FFB300 !important;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            position: relative;
+        }
+        
+        .nav-scroller .nav-link:hover {
+            color: #D4AF37 !important;
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        }
+        
+        /* Подсветка активной ссылки */
+        .nav-scroller .nav-link:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: var(--accent-gold);
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+        
+        #myFooter {
+            background: var(--footer-bg) !important;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.6);
+            border-top: 3px solid var(--accent-gold);
+            color: #ffffff;
+            padding: 40px 0 20px 0;
+        }
+        
+        #myFooter h5 {
+            color: #D4AF37;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        #myFooter ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        #myFooter ul li {
+            margin-bottom: 10px;
+        }
+        
+        #myFooter ul li::before {
+            content: '▸ ';
+            color: #D4AF37;
+            margin-right: 5px;
+        }
+        
+        #myFooter a {
+            color: #FFB300 !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        #myFooter a:hover {
+            color: #D4AF37 !important;
+            transform: translateX(5px);
+        }
+        
+        /* Стили для выпадающего меню темы */
+        .theme-dropdown {
+            background: var(--card-bg) !important;
+            border: 2px solid var(--accent-gold) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+            padding: 8px 0;
+        }
+        
+        .theme-dropdown .dropdown-item {
+            color: var(--text-color) !important;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-dropdown .dropdown-item:hover {
+            background: linear-gradient(135deg, #8B0000, #DC143C) !important;
+            color: #FFD700 !important;
+        }
+        
+        .theme-dropdown .dropdown-item.active {
+            background: linear-gradient(135deg, #8B0000, #DC143C) !important;
+            color: #FFD700 !important;
+        }
+        
+        .theme-dropdown .dropdown-item svg {
+            fill: currentColor;
+        }
+        
+        /* Динамическое изображение в header в зависимости от темы */
+        .header-logo {
+            width: 125px;
+            height: 125px;
+            border: 3px solid #D4AF37;
+            border-radius: 50%;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Скрываем/показываем изображения в зависимости от темы */
+        [data-bs-theme="light"] .header-logo-dark {
+            display: none;
+        }
+        
+        [data-bs-theme="dark"] .header-logo-light {
+            display: none;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100" data-bs-theme="light">
+
+    <!-- SVG иконки -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check2" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+        </symbol>
+        <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+            <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+        </symbol>
+        <symbol id="sun-fill" viewBox="0 0 16 16">
+            <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+        </symbol>
+    </svg>
+
+    <!-- Кнопка переключения темы -->
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3" style="z-index: 1050;">
+        <button class="btn py-2 dropdown-toggle d-flex align-items-center" id="theme-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #8B0000, #DC143C); color: #FFD700; border: 2px solid #D4AF37;">
+            <svg class="bi my-1" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end theme-dropdown">
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+                    <svg class="bi me-2" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+                    Светлое царство
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+                    <svg class="bi me-2" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+                    Тёмное царство
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Заголовок -->
+    <header>
+        <div class="container">
+            <header class="border-bottom lh-1 py-3">
+                <div class="row flex-nowrap justify-content-between align-items-center">
+                    <div class="col-4 pt-1">
+                        <a href="https://web.telegram.org/k/#-3261646428" style="color:#D4AF37; text-decoration:none;">
+                            <img src="static/image/Telegram.png" width="20" height="20"> Telegram канал
+                        </a>
+                    </div>
+                    <div class="col-4 text-center">
+                        <a href="/">
+                            <img src="static/image/Zcarstvo_light.jpg" class="header-logo header-logo-light" alt="Клуб Царь">
+                            <img src="static/image/Zcarstvo.jpg" class="header-logo header-logo-dark" alt="Клуб Царь">
+                        </a>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end align-items-center">
+                        <a class="btn" href="/join" style="background: linear-gradient(135deg, #8B0000, #DC143C); color: #FFD700; border: 2px solid #D4AF37;">
+                            ♠ Запись на игру ♠
+                        </a>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="nav-scroller py-2 mb-3">
+                <nav class="nav nav-underline justify-content-between">
+                    <a class="nav-item nav-link" href="/">Главная</a>
+                    <a class="nav-item nav-link" href="/obj">Объявления</a>
+                    <a class="nav-item nav-link" href="/rating">Рейтинг</a>
+                    <a class="nav-item nav-link" href="/rule">Правила</a>
+                    <a class="nav-item nav-link" href="/prices">Цены</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block main %}{% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer id="myFooter" class="mt-auto">
+        <div class="container">
+            <div class="row">
+                <div  style="margin-right: 145px;" class="col-sm-3">
+                    <h5>О нас</h5>
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/join">Контакты</a></li>
+                    </ul>
+                </div>
+
+                <div style="margin-right: 145px;" class="col-sm-3">
+                    <h5>Об играх</h5>
+                    <ul>
+                        <li><a href="/rule">Правила игры</a></li>
+                        <li><a href="/join">Запись на игру</a></li>
+                        <li><a href="/prices">Цены на игры</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-3">
+                    <h5>Связь</h5>
+                    <ul>
+                        <li><a href="https://web.telegram.org/k/#@MafiaTsarstvoBot">Отзывы</a></li>
+                        <li><a href="https://web.telegram.org/k/#@MafiaTsarstvoBot">Помощь</a></li>
+                    </ul>
+                </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px; padding-bottom: 20px;">
+            <span style="color: #D4AF37; font-size: 24px;">♠ ♥ ♣ ♦</span>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Переключение темы
+        const getStoredTheme = () => localStorage.getItem('theme') || 'light';
+        const setStoredTheme = theme => localStorage.setItem('theme', theme);
+        
+        const setTheme = theme => {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            document.body.setAttribute('data-bs-theme', theme);
+            
+            // Обновляем иконку на кнопке
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('svg use');
+            
+            if (theme === 'dark') {
+                icon.setAttribute('href', '#moon-stars-fill');
+            } else {
+                icon.setAttribute('href', '#sun-fill');
+            }
+            
+            // Обновляем активный пункт в меню
+            const buttons = document.querySelectorAll('[data-bs-theme-value]');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-bs-theme-value') === theme) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        };
+        
+        // Устанавливаем тему при загрузке
+        setTheme(getStoredTheme());
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('[data-bs-theme-value]');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const theme = button.getAttribute('data-bs-theme-value');
+                    setStoredTheme(theme);
+                    setTheme(theme);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

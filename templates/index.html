@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Главная - Клуб "Царь"
+{% endblock %}
+
+{% block main %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 style="font-family: 'Georgia', serif; font-size: 3em; color: var(--text-color); text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">
+            ♔ Добро пожаловать в клуб "Царь" ♔
+        </h1>
+        <p style="font-size: 1.3em; color: #D4AF37; font-style: italic; margin-top: 20px;">
+            Место, где рождаются легенды мафии
+        </p>
+    </div>
+
+    <div class="row g-4 py-5">
+        <div class="col-md-4">
+            <div class="card h-100" style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);">
+                <div class="card-body text-center p-4">
+                    <div style="font-size: 48px; color: #D4AF37; margin-bottom: 20px;">♠</div>
+                    <h3 style="color: var(--text-color); font-family: 'Georgia', serif;">Профессиональная игра</h3>
+                    <p style="color: var(--text-color); margin-top: 15px;">
+                        Играем по классическим правилам с опытными ведущими
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100" style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);">
+                <div class="card-body text-center p-4">
+                    <div style="font-size: 48px; color: #DC143C; margin-bottom: 20px;">♥</div>
+                    <h3 style="color: var(--text-color); font-family: 'Georgia', serif;">Дружная атмосфера</h3>
+                    <p style="color: var(--text-color); margin-top: 15px;">
+                        Приятное общение и новые знакомства за игровым столом
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100" style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);">
+                <div class="card-body text-center p-4">
+                    <div style="font-size: 48px; color: #000000; margin-bottom: 20px;">♣</div>
+                    <h3 style="color: var(--text-color); font-family: 'Georgia', serif;">Регулярные игры</h3>
+                    <p style="color: var(--text-color); margin-top: 15px;">
+                        Еженедельные встречи в удобное время. Расписание в Telegram канале
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center my-5">
+        <div style="font-size: 48px; color: #D4AF37; letter-spacing: 30px; text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);">
+            ♠ ♥ ♣ ♦
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="background: var(--card-bg); border: 3px solid var(--accent-gold); border-radius: 20px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);">
+                <div class="card-body text-center p-5">
+                    <h2 style="color: var(--text-color); font-family: 'Georgia', serif; margin-bottom: 25px;">
+                        Готовы начать играть?
+                    </h2>
+                    <p style="color: var(--text-color); font-size: 1.1em; margin-bottom: 30px;">
+                        Присоединяйтесь к нашему сообществу и окунитесь в мир интриг и стратегии
+                    </p>
+                    <a href="/join" class="btn btn-lg" style="background: linear-gradient(135deg, #8B0000, #DC143C); color: #FFD700; border: 3px solid #D4AF37; padding: 15px 40px; font-size: 1.2em; font-weight: 600; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transition: all 0.3s ease;">
+                        ♠ Записаться на игру ♠
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center my-5">
+        <div style="font-size: 48px; color: #D4AF37; letter-spacing: 30px; text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);">
+            ♦ ♣ ♥ ♠
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <div class="card" style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 15px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);">
+                <div class="card-body p-4">
+                    <h3 style="color: var(--text-color); font-family: 'Georgia', serif; text-align: center; margin-bottom: 20px;">
+                        📍 Где нас найти
+                    </h3>
+                    <p style="color: var(--text-color); text-align: center; font-size: 1.1em; margin-bottom: 20px;">
+                        г. Красноярск, ул. Молокова 1к2, кафе "Графин"
+                    </p>
+                    <div style="position: relative; overflow: hidden; border-radius: 10px; border: 2px solid var(--accent-gold);">
+                        <iframe 
+                            src="https://yandex.ru/map-widget/v1/?ll=92.873772%2C56.010569&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg1NjgyNzQzMRJb0KDQvtGB0YHQuNGPLCDQmtGA0LDRgdC90L7Rj9GA0YHQuiwg0YPQu9C40YbQsCDQnNC-0LvQvtC60L7QstCwLCAxLzIiCg1EvUZCFdZsWkI%2C&z=16.5" 
+                            width="100%" 
+                            height="400" 
+                            frameborder="0" 
+                            allowfullscreen="true" 
+                            style="position: relative;">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Объявления - Клуб "Царь"
+{% endblock %}
+
+{% block main %}
+<style>
+  .announcements-header {
+    text-align: center;
+    margin: 40px 0;
+    position: relative;
+  }
+  
+  .announcements-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.5em;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .announcements-header::before {
+    content: '📢';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .announcement-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .announcement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(212, 175, 55, 0.4);
+  }
+  
+  .announcement-card h3 {
+    color: #D4AF37;
+    font-family: 'Georgia', serif;
+    margin-bottom: 15px;
+  }
+  
+  .announcement-date {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+  }
+  
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+  }
+  
+  .pagination {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .pagination .page-item {
+    display: inline-block;
+  }
+  
+  .pagination .page-link {
+    padding: 10px 15px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .pagination .page-link:hover {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    border-color: #D4AF37;
+    transform: translateY(-2px);
+  }
+  
+  .pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    border-color: #D4AF37;
+  }
+  
+  .pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .pagination .page-item.disabled .page-link:hover {
+    background: var(--card-bg);
+    color: var(--text-color);
+    transform: none;
+  }
+  
+  .search-container {
+    max-width: 800px;
+    margin: 30px auto;
+  }
+  
+  .search-form {
+    margin-bottom: 15px;
+  }
+  
+  .input-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .search-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid var(--card-border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #D4AF37;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  }
+  
+  .search-btn {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+  }
+  
+  .clear-btn {
+    padding: 12px 20px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 2px solid var(--card-border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .clear-btn:hover {
+    background: #999;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .search-info {
+    text-align: center;
+    color: var(--text-color);
+    font-style: italic;
+    padding: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+  }
+  
+  .search-info strong {
+    color: #D4AF37;
+  }
+</style>
+
+<div class="container">
+  <div class="announcements-header">
+    <h1>Объявления клуба</h1>
+    <p style="color: #D4AF37; font-style: italic;">Актуальные новости и события из нашего Telegram-канала</p>
+  </div>
+  
+  <!-- Форма поиска -->
+  <div class="search-container">
+    <form method="get" action="{{ url_for('obj') }}" class="search-form">
+      <div class="input-group">
+        <input 
+          type="text" 
+          name="search" 
+          class="form-control search-input" 
+          placeholder="🔍 Поиск по объявлениям..." 
+          value="{{ search_query or '' }}"
+        >
+        <button type="submit" class="btn search-btn">Найти</button>
+        {% if search_query %}
+        <a href="{{ url_for('obj') }}" class="btn clear-btn">Очистить</a>
+        {% endif %}
+      </div>
+    </form>
+    {% if search_query %}
+    <div class="search-info">
+      Результаты поиска для: <strong>"{{ search_query }}"</strong>
+    </div>
+    {% endif %}
+  </div>
+  
+  {% if announcements %}
+    {% for announcement in announcements %}
+    <div class="announcement-card">
+      <div class="announcement-date">{{ announcement.date.strftime('%d.%m.%Y %H:%M') }}</div>
+      <h3>{{ announcement.title }}</h3>
+      <p style="white-space: pre-wrap;">{{ announcement.content }}</p>
+    </div>
+    {% endfor %}
+    
+    <!-- Пагинация -->
+    {% if pagination.pages > 1 %}
+    <div class="pagination-container">
+      <ul class="pagination">
+        <!-- Предыдущая страница -->
+        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+          {% if pagination.has_prev %}
+            <a class="page-link" href="{{ url_for('obj', page=pagination.prev_num, search=search_query) }}">← Назад</a>
+          {% else %}
+            <span class="page-link">← Назад</span>
+          {% endif %}
+        </li>
+        
+        <!-- Первая страница -->
+        {% if pagination.page > 3 %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('obj', page=1, search=search_query) }}">1</a>
+        </li>
+        {% if pagination.page > 4 %}
+        <li class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        {% endif %}
+        
+        <!-- Страницы вокруг текущей -->
+        {% for p in range([pagination.page - 2, 1]|max, [pagination.page + 2, pagination.pages]|min + 1) %}
+        <li class="page-item {% if p == pagination.page %}active{% endif %}">
+          <a class="page-link" href="{{ url_for('obj', page=p, search=search_query) }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+        
+        <!-- Последняя страница -->
+        {% if pagination.page < pagination.pages - 2 %}
+        {% if pagination.page < pagination.pages - 3 %}
+        <li class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('obj', page=pagination.pages, search=search_query) }}">{{ pagination.pages }}</a>
+        </li>
+        {% endif %}
+        
+        <!-- Следующая страница -->
+        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+          {% if pagination.has_next %}
+            <a class="page-link" href="{{ url_for('obj', page=pagination.next_num, search=search_query) }}">Вперёд →</a>
+          {% else %}
+            <span class="page-link">Вперёд →</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+    
+    <div class="text-center" style="color: #999; margin-bottom: 20px;">
+      Страница {{ pagination.page }} из {{ pagination.pages }} 
+      (всего объявлений: {{ pagination.total }})
+    </div>
+    {% endif %}
+    
+  {% else %}
+    <div class="announcement-card">
+      {% if search_query %}
+      <h3>Ничего не найдено</h3>
+      <p>По запросу <strong>"{{ search_query }}"</strong> ничего не найдено.</p>
+      <p><a href="{{ url_for('obj') }}" style="color: #D4AF37;">Показать все объявления</a></p>
+      {% else %}
+      <h3>Пока нет объявлений</h3>
+      <p>Следите за новостями в нашем <a href="https://web.telegram.org/k/#-3261646428" style="color: #D4AF37;">Telegram-канале</a></p>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <div class="text-center my-5">
+    <a href="https://web.telegram.org/k/#-3261646428" class="telegram-channel-btn">
+      <img src="static/image/Telegram.png" width="80" height="80" alt="Telegram">
+      <div class="btn-title">Присоединиться к каналу</div>
+      <div class="btn-subtitle">Все новости и объявления</div>
+    </a>
+  </div>
+  
+  <style>
+    .telegram-channel-btn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 35px 50px;
+      background: linear-gradient(145deg, #ffffff, #f5f5f5);
+      border: 3px solid #000000;
+      border-radius: 15px;
+      text-decoration: none;
+      color: #000000;
+      transition: all 0.4s ease;
+      min-width: 280px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    [data-bs-theme="dark"] .telegram-channel-btn {
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      color: #D4AF37;
+      border-color: #D4AF37;
+    }
+    
+    .telegram-channel-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .telegram-channel-btn:hover::before {
+      left: 100%;
+    }
+    
+    .telegram-channel-btn:hover {
+      background: linear-gradient(145deg, #ffffff, #fffef8);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 12px 24px rgba(0, 0, 0, 0.3);
+      transform: translateY(-5px) scale(1.05);
+      border-color: #D4AF37;
+      color: #000000;
+    }
+    
+    [data-bs-theme="dark"] .telegram-channel-btn:hover {
+      background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), 0 12px 24px rgba(0, 0, 0, 0.5);
+      color: #D4AF37;
+    }
+    
+    .telegram-channel-btn img {
+      margin-bottom: 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    }
+    
+    .telegram-channel-btn:hover img {
+      transform: scale(1.1) rotate(5deg);
+      filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5));
+    }
+    
+    .btn-title {
+      font-family: 'Georgia', serif;
+      font-weight: 600;
+      font-size: 1.3em;
+      margin-bottom: 5px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .btn-subtitle {
+      font-size: 0.9em;
+      opacity: 0.8;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</div>
+{% endblock %}

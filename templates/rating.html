@@ -1,0 +1,576 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Рейтинг игроков - Клуб "Царь"
+{% endblock %}
+
+{% block main %}
+<style>
+  .rating-header {
+    text-align: center;
+    margin: 40px 0;
+    position: relative;
+  }
+  
+  .rating-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.5em;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+  }
+  
+  .rating-header::before {
+    content: '🏆';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 10px;
+    animation: trophy-bounce 2s ease-in-out infinite;
+  }
+  
+  @keyframes trophy-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .rating-header p {
+    font-style: italic;
+    color: #D4AF37;
+    font-size: 1.1em;
+  }
+  
+  .rating-table-container {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 30px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 600px;
+    position: relative;
+  }
+  
+  .table-wrapper {
+    transform-origin: top left;
+    transition: transform 0.3s ease;
+  }
+  
+  .zoom-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .zoom-btn {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    border: 2px solid #D4AF37;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.1em;
+  }
+  
+  .zoom-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .zoom-btn:hover::before {
+    left: 100%;
+  }
+  
+  .zoom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+  }
+  
+  .zoom-level {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 2px solid var(--card-border);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    min-width: 80px;
+    justify-content: center;
+  }
+  
+  .rating-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  
+  .rating-table thead th {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    padding: 12px 8px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+    font-size: 0.95em;
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+  }
+  
+  .rating-table thead th:last-child {
+    border-right: none;
+  }
+  
+  .rating-table thead th:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+  
+  .rating-table thead th:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+  
+  .rating-table tbody tr {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .rating-table tbody tr:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(212, 175, 55, 0.4);
+    border-color: #D4AF37;
+  }
+  
+  .rating-table tbody td {
+    padding: 15px 10px;
+    color: var(--text-color);
+    border: none;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .rating-table tbody tr td:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+  
+  .rating-table tbody tr td:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+  
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  
+  .rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    animation: pulse-gold 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+    50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.9); }
+  }
+  
+  .rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+    color: #000;
+    box-shadow: 0 0 10px rgba(192, 192, 192, 0.6);
+  }
+  
+  .rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #B87333);
+    color: #FFF;
+    box-shadow: 0 0 10px rgba(205, 127, 50, 0.6);
+  }
+  
+  .rank-other {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    color: var(--text-color);
+  }
+  
+  .player-name {
+    font-weight: 600;
+    font-size: 1.1em;
+    font-family: 'Georgia', serif;
+  }
+  
+  .stat-value {
+    font-weight: bold;
+    color: #D4AF37;
+  }
+  
+  .loading-spinner {
+    text-align: center;
+    padding: 50px;
+    font-size: 2em;
+    color: #D4AF37;
+  }
+  
+  .loading-spinner::before {
+    content: 'Загрузка рейтинга ';
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.6em;
+  }
+  
+  .loading-spinner::after {
+    content: '⏳';
+    animation: spin 2s linear infinite;
+    display: inline-block;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .error-message {
+    text-align: center;
+    padding: 30px;
+    background: var(--card-bg);
+    border: 2px solid #DC143C;
+    border-radius: 15px;
+    color: #DC143C;
+    font-size: 1.1em;
+  }
+  
+  .rating-info {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .rating-info h3 {
+    color: #D4AF37;
+    font-family: 'Georgia', serif;
+    margin-bottom: 15px;
+  }
+  
+  .rating-info ul {
+    list-style: none;
+    padding: 0;
+    color: var(--text-color);
+  }
+  
+  .rating-info ul li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+  }
+  
+  .rating-info ul li::before {
+    content: '▸';
+    color: #D4AF37;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .refresh-btn {
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    border: 2px solid #D4AF37;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .refresh-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .refresh-btn:hover::before {
+    left: 100%;
+  }
+  
+  .refresh-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5);
+  }
+</style>
+
+<div class="rating-header">
+  <h1>Рейтинг игроков</h1>
+  <p>Таблица лидеров клуба "Царь"</p>
+</div>
+
+<div class="rating-info">
+  <h3>ℹ️ О рейтинге</h3>
+  <ul>
+    <li>Рейтинг обновляется после каждой игры</li>
+    <li>Учитываются победы, поражения и активность игроков</li>
+    <li>Для участия в рейтинге нужно зарегистрироваться в клубе</li>
+  </ul>
+  <div style="text-align: center; margin-top: 15px;">
+    <button class="refresh-btn" onclick="loadRating()">🔄 Обновить рейтинг</button>
+  </div>
+</div>
+
+<div class="zoom-controls">
+  <button class="zoom-btn" onclick="zoomOut()">➖ Уменьшить</button>
+  <div class="zoom-level" id="zoom-level">100%</div>
+  <button class="zoom-btn" onclick="zoomIn()">➕ Увеличить</button>
+  <button class="zoom-btn" onclick="resetZoom()">🔄 Сбросить</button>
+</div>
+
+<div class="rating-table-container" id="table-container">
+  <div class="table-wrapper" id="table-wrapper">
+    <div id="rating-content" class="loading-spinner"></div>
+  </div>
+</div>
+
+<div class="rating-info">
+  <h3>🎯 Как попасть в рейтинг?</h3>
+  <ul>
+    <li><a href="/join" style="color: #D4AF37; text-decoration: none;">Запишитесь на игру через телеграм бота </a></li>
+    <li>Участвуйте в играх регулярно</li>
+    <li>Играйте честно и соблюдайте правила</li>
+    <li>Ваши результаты будут автоматически добавлены в таблицу</li>
+  </ul>
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+  <div style="font-size: 36px; color: #D4AF37; letter-spacing: 20px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);">
+    ♠ ♥ ♣ ♦
+  </div>
+</div>
+
+<script>
+let currentZoom = 1.0;
+
+function zoomIn() {
+  if (currentZoom < 2.0) {
+    currentZoom += 0.1;
+    applyZoom();
+  }
+}
+
+function zoomOut() {
+  if (currentZoom > 0.5) {
+    currentZoom -= 0.1;
+    applyZoom();
+  }
+}
+
+function resetZoom() {
+  currentZoom = 1.0;
+  applyZoom();
+}
+
+function applyZoom() {
+  const wrapper = document.getElementById('table-wrapper');
+  const container = document.getElementById('table-container');
+  wrapper.style.transform = `scale(${currentZoom})`;
+  
+  // Обновляем отображение уровня зума
+  document.getElementById('zoom-level').textContent = Math.round(currentZoom * 100) + '%';
+  
+  // Корректируем высоту контейнера при масштабировании
+  if (currentZoom < 1.0) {
+    container.style.maxHeight = `${600 * currentZoom}px`;
+  } else {
+    container.style.maxHeight = '600px';
+  }
+}
+
+function loadRating() {
+  const content = document.getElementById('rating-content');
+  content.innerHTML = '';
+  content.className = 'loading-spinner';
+  
+  // Загружаем данные из Google Sheets напрямую
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/1zQvR7Hyh1EZR3IHe57fJC64MONxTbwNawN8qnY0HXWE/export?format=csv&gid=1231166974';
+  
+  fetch(sheetUrl)
+    .then(response => response.text())
+    .then(csvData => {
+      const lines = csvData.trim().split('\n');
+      
+      if (lines.length < 3) {
+        content.className = '';
+        content.innerHTML = '<div class="error-message">❌ Нет данных для отображения</div>';
+        return;
+      }
+      
+      // Получаем заголовки - берем только вторую строку, так как там все столбцы
+      const headerLine = lines[1];
+      const headers = parseCSVLine(headerLine);
+      
+      console.log('Headers:', headers);
+      
+      // Пропускаем первые две строки (заголовки в Google Sheets)
+      const dataLines = lines.slice(2);
+      
+      // Создаем таблицу с простыми заголовками в одну строку
+      let tableHTML = `
+        <table class="rating-table">
+          <thead>
+            <tr>
+      `;
+      
+      // Добавляем все заголовки из второй строки
+      headers.forEach((header, index) => {
+        if (header) {
+          tableHTML += `<th>${header}</th>`;
+        } else {
+          // Если заголовок пустой, берем из первой строки
+          const headers1 = parseCSVLine(lines[0]);
+          if (headers1[index]) {
+            tableHTML += `<th>${headers1[index]}</th>`;
+          } else {
+            tableHTML += `<th>-</th>`;
+          }
+        }
+      });
+      
+      tableHTML += `
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      dataLines.forEach((line, index) => {
+        const values = parseCSVLine(line);
+        
+        console.log(`Row ${index + 1}:`, values);
+        
+        // Проверяем, что строка не пустая
+        if (values.length >= 1 && values.some(v => v)) {
+          tableHTML += `
+            <tr style="animation-delay: ${index * 0.05}s">
+          `;
+          
+          // Добавляем все значения из строки
+          values.forEach((value, colIndex) => {
+            const displayValue = value || '-';
+            
+            // Первый столбец (номер) - в badge
+            if (colIndex === 0 && !isNaN(displayValue) && displayValue !== '') {
+              const num = parseInt(displayValue);
+              let rankClass = 'rank-other';
+              if (num === 1) rankClass = 'rank-1';
+              else if (num === 2) rankClass = 'rank-2';
+              else if (num === 3) rankClass = 'rank-3';
+              
+              tableHTML += `<td><div class="rank-badge ${rankClass}">${displayValue}</div></td>`;
+            }
+            // Второй столбец (имя игрока) - жирным
+            else if (colIndex === 1) {
+              tableHTML += `<td><span class="player-name">${displayValue}</span></td>`;
+            }
+            // Остальные столбцы
+            else {
+              tableHTML += `<td>${displayValue}</td>`;
+            }
+          });
+          
+          tableHTML += `</tr>`;
+        }
+      });
+      
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+      
+      content.className = '';
+      content.innerHTML = tableHTML;
+    })
+    .catch(error => {
+      console.error('Error loading rating:', error);
+      content.className = '';
+      content.innerHTML = '<div class="error-message">❌ Ошибка загрузки рейтинга. Попробуйте обновить страницу.</div>';
+    });
+}
+
+// Функция для правильного парсинга CSV с учетом кавычек
+function parseCSVLine(line) {
+  const values = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        // Двойные кавычки внутри значения
+        current += '"';
+        i++;
+      } else {
+        // Начало или конец значения в кавычках
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      // Разделитель столбцов
+      values.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  // Добавляем последнее значение
+  values.push(current.trim());
+  
+  return values;
+}
+
+// Загружаем рейтинг при загрузке страницы
+document.addEventListener('DOMContentLoaded', loadRating);
+</script>
+{% endblock %}

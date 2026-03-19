@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Запись на игру
+{% endblock %}
+
+{% block menu %}
+
+{% endblock %}
+
+{% block main %}
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+      </symbol>
+    </svg>
+
+
+
+<style>
+  .join-page-header {
+    text-align: center;
+    margin: 40px 0;
+    position: relative;
+  }
+  
+  .join-page-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.5em;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+  }
+  
+  .join-page-header::before {
+    content: '♔';
+    display: block;
+    font-size: 48px;
+    color: #D4AF37;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    margin-bottom: 10px;
+  }
+  
+  .join-page-header p {
+    font-style: italic;
+    color: #D4AF37;
+    font-size: 1.1em;
+  }
+  
+  .join-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 40px;
+    margin: 15px;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border: 3px solid #000000;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #000000;
+    transition: all 0.4s ease;
+    min-width: 250px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  [data-bs-theme="dark"] .join-btn {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    color: #D4AF37;
+    border-color: #D4AF37;
+  }
+  
+  .join-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .join-btn:hover::before {
+    left: 100%;
+  }
+  
+  .join-btn:hover {
+    background: linear-gradient(145deg, #ffffff, #fffef8);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 12px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px) scale(1.05);
+    border-color: #D4AF37;
+  }
+  
+  [data-bs-theme="dark"] .join-btn:hover {
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), 0 12px 24px rgba(0, 0, 0, 0.5);
+  }
+  
+  .join-btn img {
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  }
+  
+  .join-btn:hover img {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5));
+  }
+  
+  .join-btn svg {
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  }
+  
+  .join-btn:hover svg {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5));
+  }
+  
+  .join-btn .h5 {
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  
+  .mafia-card-suits {
+    text-align: center;
+    font-size: 36px;
+    color: #D4AF37;
+    margin: 30px 0;
+    letter-spacing: 20px;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+  }
+</style>
+
+<main class="form-signin w-100 m-auto">
+  <div class="join-page-header">
+    <h1>Присоединяйся к игре</h1>
+    <p>Выбери удобный способ записи в клуб "Царь"</p>
+  </div>
+  
+  <div class="mafia-card-suits">♠ ♥ ♣ ♦</div>
+  
+  <div class="buttons-container">
+    <a href="https://web.telegram.org/k/#@MafiaTsarstvoBot" class="join-btn">
+      <img src="static/image/Telegram.png" width="100" height="100" alt="Telegram">
+      <div class="h5">Telegram Бот</div>
+    </a>
+    <a href="https://web.telegram.org/k/#-3261646428" class="join-btn">
+      <img src="static/image/Zcarstvo.jpg" width="100" height="100" alt="Царство">
+      <div class="h5">Telegram канал</div>
+    </a>
+    <a href="https://max.ru/join/6oY5YlOG6d-TqzfXdYC6BCJgdS5KOL49Kx-Rw8td9pc" class="join-btn" target="_blank">
+      <img src="https://max.ru/s/img/big-logo.png" width="100" height="100" alt="Max">
+      <div class="h5">Канал в Max</div>
+    </a>
+    <a href="tel:+79832095812" class="join-btn">
+      <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="#D4AF37"/>
+      </svg>
+      <div class="h5">Позвонить</div>
+      <div style="font-size: 0.9em; color: #D4AF37; margin-top: 5px;">+7 (983) 209-58-12</div>
+    </a>
+  </div>
+  
+  <div class="mafia-card-suits">♦ ♣ ♥ ♠</div>
+</main>
+
+<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+
+
+</body>
+
+{% endblock %}
+
+

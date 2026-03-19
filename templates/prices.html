@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Цены - Клуб "Царь"
+{% endblock %}
+
+{% block main %}
+<style>
+  .prices-header {
+    text-align: center;
+    margin: 40px 0;
+    position: relative;
+  }
+  
+  .prices-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.5em;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .prices-header::before {
+    content: '💰';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .price-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  .price-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(212, 175, 55, 0.4);
+  }
+  
+  .price-card h3 {
+    color: #D4AF37;
+    font-family: 'Georgia', serif;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+  }
+  
+  .price-amount {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 20px 0;
+  }
+  
+  .price-amount span {
+    font-size: 0.5em;
+    color: #999;
+  }
+  
+  .price-features {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  
+  .price-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--text-color);
+  }
+  
+  .price-features li:last-child {
+    border-bottom: none;
+  }
+  
+  .price-features li::before {
+    content: '✓ ';
+    color: #D4AF37;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .featured-card {
+    border: 3px solid #D4AF37;
+    position: relative;
+  }
+  
+  .featured-badge {
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background: linear-gradient(135deg, #8B0000, #DC143C);
+    color: #FFD700;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    border: 2px solid #D4AF37;
+  }
+  
+  .contact-section {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  .contact-section h3 {
+    color: #D4AF37;
+    margin-bottom: 20px;
+  }
+  
+  .contact-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 40px;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border: 3px solid #000000;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #000000;
+    transition: all 0.4s ease;
+    min-width: 250px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+  
+  [data-bs-theme="dark"] .contact-btn {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    color: #D4AF37;
+    border-color: #D4AF37;
+  }
+  
+  .contact-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .contact-btn:hover::before {
+    left: 100%;
+  }
+  
+  .contact-btn:hover {
+    background: linear-gradient(145deg, #ffffff, #fffef8);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 12px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px) scale(1.05);
+    border-color: #D4AF37;
+    color: #000000;
+  }
+  
+  [data-bs-theme="dark"] .contact-btn:hover {
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), 0 12px 24px rgba(0, 0, 0, 0.5);
+    color: #D4AF37;
+  }
+  
+  .contact-btn .btn-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  }
+  
+  .contact-btn:hover .btn-icon {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5));
+  }
+  
+  .contact-btn .btn-text {
+    font-family: 'Georgia', serif;
+    font-weight: 600;
+    font-size: 1.1em;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<div class="container">
+  <div class="prices-header">
+    <h1>Цены на игры</h1>
+    <p style="color: #D4AF37; font-style: italic;">Выберите подходящий вариант</p>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-4">
+      <div class="price-card">
+        <h3>♠ Разовая игра ♠</h3>
+        <div class="price-amount">
+          1000 <span>₽</span>
+        </div>
+        <ul class="price-features">
+          <li>Одна игра</li>
+          <li>Весь вечер</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="price-card featured-card">
+        <div class="featured-badge">Популярно</div>
+        <h3>♥ Корпоратив ♥</h3>
+        <div class="price-amount">
+          10000 <span>₽</span>
+        </div>
+        <ul class="price-features">
+          <li>5 часов</li>
+          <li>Чем больше тем веселее</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="price-card">
+        <h3>♣ День рождение ♣</h3>
+        <div class="price-amount">
+          10000 <span>₽</span>
+        </div>
+        <ul class="price-features">
+          <li>5 часов</li>
+          <li>Отпразднуйте как следует</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="price-card">
+        <h3>♦ Детская мафия ♦</h3>
+        <div class="price-amount">
+          от 6000 до 10000 <span>₽</span>
+        </div>
+        <ul class="price-features">
+          <li>3 часа - 6000</li>
+          <li>5 часов - 10000</li>
+          <li>Пусть повеселятся детишки</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="price-card">
+        <h3>🃏Настолка "Денежный поток"🃏</h3>
+        <div class="price-amount">
+          2000
+        </div>
+        <ul class="price-features">
+          <li>Игра как монополия</li>
+          <li>Одна игра</li>
+          <li>Игра долгая</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="price-card">
+        <h3> 🂱 Вечер настольных игр  🂱</h3>
+        <div class="price-amount">
+          500 <span>₽</span>
+        </div>
+        <ul class="price-features">
+          <li>Вечер</li>
+          <li>Игры на выбор</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="contact-section">
+    <h3>Как записаться?</h3>
+    <p style="color: var(--text-color); font-size: 1.1em; margin-bottom: 20px;">
+      Выберите удобный способ связи
+    </p>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <a href="https://web.telegram.org/k/#@MafiaTsarstvoBot" class="contact-btn w-100">
+          <div class="btn-icon">📱</div>
+          <div class="btn-text">Telegram бот</div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="https://web.telegram.org/k/#-3261646428" class="contact-btn w-100">
+          <div class="btn-icon">💬</div>
+          <div class="btn-text">Telegram канал</div>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/join" class="contact-btn w-100">
+          <div class="btn-icon">♠</div>
+          <div class="btn-text">Запись на игру</div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div style="text-align: center; margin: 40px 0;">
+    <div style="font-size: 36px; color: #D4AF37; letter-spacing: 20px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);">
+      ♠ ♥ ♣ ♦
+    </div>
+  </div>
+</div>
+{% endblock %}
