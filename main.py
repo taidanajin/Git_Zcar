@@ -5,6 +5,11 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, log
 from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 import os
+import threading
+import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'change-this-in-production')
@@ -166,6 +171,44 @@ def sync_telegram():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/telegram-webhook', methods=['POST'])
+def telegram_webhook():
+    """Webhook для получения сообщений из Telegram в реальном времени."""
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({'ok': False}), 400
+
+    message = (
+        data.get('message') or
+        data.get('channel_post') or
+        data.get('edited_message') or
+        data.get('edited_channel_post')
+    )
+
+    if message:
+        chat_id = str(message.get('chat', {}).get('id', ''))
+        if chat_id == app.config['TELEGRAM_CHAT_ID']:
+            text = message.get('text') or message.get('caption', '')
+            msg_id = message.get('message_id')
+            date = message.get('date', 0)
+
+            if text and len(text.strip()) >= 5:
+                existing = Announcement.query.filter_by(telegram_message_id=msg_id).first()
+                if not existing:
+                    lines = text.strip().split('\n')
+                    title = lines[0][:200]
+                    announcement = Announcement(
+                        title=title,
+                        content=text.strip(),
+                        telegram_message_id=msg_id,
+                        date=datetime.fromtimestamp(date)
+                    )
+                    db.session.add(announcement)
+                    db.session.commit()
+
+    return jsonify({'ok': True})
+
+
 @app.route('/fetch-telegram-messages')
 def fetch_telegram_messages():
     """Автоматическая синхронизация через webhook или cron"""
@@ -237,4 +280,62 @@ def logout():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+
+    # Запускаем Telegram бота в фоновом потоке
+    def run_bot():
+        token = app.config['TELEGRAM_BOT_TOKEN']
+        chat_id = app.config['TELEGRAM_CHAT_ID']
+        offset = None
+
+        logger.info(f'Telegram бот запущен, слушаю канал {chat_id}')
+
+        while True:
+            try:
+                params = {'timeout': 30, 'allowed_updates': ['message', 'channel_post']}
+                if offset:
+                    params['offset'] = offset
+
+                resp = requests.get(
+                    f'https://api.telegram.org/bot{token}/getUpdates',
+                    params=params, timeout=35
+                )
+                data = resp.json()
+
+                if not data.get('ok'):
+                    time.sleep(5)
+                    continue
+
+                for update in data.get('result', []):
+                    message = (update.get('message') or update.get('channel_post') or
+                               update.get('edited_message') or update.get('edited_channel_post'))
+
+                    if message and str(message.get('chat', {}).get('id', '')) == str(chat_id):
+                        text = message.get('text') or message.get('caption', '')
+                        msg_id = message.get('message_id')
+                        date = message.get('date', 0)
+
+                        if text and len(text.strip()) >= 5:
+                            with app.app_context():
+                                existing = Announcement.query.filter_by(telegram_message_id=msg_id).first()
+                                if not existing:
+                                    lines = text.strip().split('\n')
+                                    ann = Announcement(
+                                        title=lines[0][:200],
+                                        content=text.strip(),
+                                        telegram_message_id=msg_id,
+                                        date=datetime.fromtimestamp(date)
+                                    )
+                                    db.session.add(ann)
+                                    db.session.commit()
+                                    logger.info(f'Новое объявление: {lines[0][:50]}')
+
+                    offset = update['update_id'] + 1
+
+            except Exception as e:
+                logger.error(f'Ошибка бота: {e}')
+                time.sleep(5)
+
+    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread.start()
+
     app.run(debug=True, host='127.0.0.1', port=5000)
