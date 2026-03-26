@@ -21,10 +21,12 @@
   }
   
   .rating-header::before {
-    content: '🏆';
+    content: '♛';
     display: block;
     font-size: 48px;
     margin-bottom: 10px;
+    color: #D4AF37;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
     animation: trophy-bounce 2s ease-in-out infinite;
   }
   
@@ -254,7 +256,7 @@
   }
   
   .loading-spinner::after {
-    content: '⏳';
+    content: '◈';
     animation: spin 2s linear infinite;
     display: inline-block;
   }
@@ -349,22 +351,22 @@
 </div>
 
 <div class="rating-info">
-  <h3>ℹ️ О рейтинге</h3>
+  <h3>— О рейтинге —</h3>
   <ul>
     <li>Рейтинг обновляется после каждой игры</li>
     <li>Учитываются победы, поражения и активность игроков</li>
     <li>Для участия в рейтинге нужно зарегистрироваться в клубе</li>
   </ul>
   <div style="text-align: center; margin-top: 15px;">
-    <button class="refresh-btn" onclick="loadRating()">🔄 Обновить рейтинг</button>
+    <button class="refresh-btn" onclick="loadRating()">&#8635; Обновить рейтинг</button>
   </div>
 </div>
 
 <div class="zoom-controls">
-  <button class="zoom-btn" onclick="zoomOut()">➖ Уменьшить</button>
+  <button class="zoom-btn" onclick="zoomOut()">&#8722; Уменьшить</button>
   <div class="zoom-level" id="zoom-level">100%</div>
-  <button class="zoom-btn" onclick="zoomIn()">➕ Увеличить</button>
-  <button class="zoom-btn" onclick="resetZoom()">🔄 Сбросить</button>
+  <button class="zoom-btn" onclick="zoomIn()">&#43; Увеличить</button>
+  <button class="zoom-btn" onclick="resetZoom()">&#8635; Сбросить</button>
 </div>
 
 <div class="rating-table-container" id="table-container">
@@ -374,7 +376,7 @@
 </div>
 
 <div class="rating-info">
-  <h3>🎯 Как попасть в рейтинг?</h3>
+  <h3>— Как попасть в рейтинг? —</h3>
   <ul>
     <li><a href="/join" style="color: #D4AF37; text-decoration: none;">Запишитесь на игру через телеграм бота </a></li>
     <li>Участвуйте в играх регулярно</li>
@@ -442,7 +444,7 @@ function loadRating() {
       
       if (lines.length < 3) {
         content.className = '';
-        content.innerHTML = '<div class="error-message">❌ Нет данных для отображения</div>';
+        content.innerHTML = '<div class="error-message">&#10007; Нет данных для отображения</div>';
         return;
       }
       
@@ -533,7 +535,7 @@ function loadRating() {
     .catch(error => {
       console.error('Error loading rating:', error);
       content.className = '';
-      content.innerHTML = '<div class="error-message">❌ Ошибка загрузки рейтинга. Попробуйте обновить страницу.</div>';
+      content.innerHTML = '<div class="error-message">&#10007; Ошибка загрузки рейтинга. Попробуйте обновить страницу.</div>';
     });
 }
 
