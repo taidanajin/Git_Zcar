@@ -265,6 +265,29 @@
         [data-bs-theme="dark"] .header-logo-light {
             display: none;
         }
+
+        /* Мобильная адаптация */
+        @media (max-width: 576px) {
+            .header-logo {
+                width: 70px;
+                height: 70px;
+            }
+            .col-4.pt-1 a {
+                font-size: 0.75em;
+            }
+            .col-4 .btn {
+                font-size: 0.75em;
+                padding: 6px 10px;
+            }
+            .nav-scroller .nav-link {
+                padding: 8px 10px;
+                font-size: 0.85em;
+            }
+            #myFooter .row > div {
+                margin-right: 0 !important;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100" data-bs-theme="light">

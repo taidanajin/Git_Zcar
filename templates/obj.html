@@ -20,10 +20,12 @@
   }
   
   .announcements-header::before {
-    content: '📢';
+    content: '◈';
     display: block;
     font-size: 48px;
     margin-bottom: 10px;
+    color: #D4AF37;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
   }
   
   .announcement-card {
@@ -197,7 +199,7 @@
           type="text" 
           name="search" 
           class="form-control search-input" 
-          placeholder="🔍 Поиск по объявлениям..." 
+          placeholder="Поиск по объявлениям..." 
           value="{{ search_query or '' }}"
         >
         <button type="submit" class="btn search-btn">Найти</button>

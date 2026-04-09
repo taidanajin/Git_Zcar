@@ -20,10 +20,12 @@
   }
   
   .prices-header::before {
-    content: '💰';
+    content: '♦';
     display: block;
     font-size: 48px;
     margin-bottom: 10px;
+    color: #D4AF37;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
   }
   
   .price-card {
@@ -120,18 +122,26 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 30px 40px;
+    padding: 20px 25px;
     background: linear-gradient(145deg, #ffffff, #f5f5f5);
     border: 3px solid #000000;
     border-radius: 15px;
     text-decoration: none;
     color: #000000;
     transition: all 0.4s ease;
-    min-width: 250px;
+    min-width: 200px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
     margin-bottom: 15px;
+  }
+
+  @media (max-width: 576px) {
+    .contact-btn { min-width: unset; width: 100%; padding: 15px; }
+    .contact-btn .btn-icon { font-size: 32px; margin-bottom: 8px; }
+    .prices-header h1 { font-size: 1.8em; }
+    .price-amount { font-size: 2em; }
+    .row.justify-content-center .col-md-4 { margin-bottom: 10px; }
   }
   
   [data-bs-theme="dark"] .contact-btn {
@@ -255,7 +265,7 @@
     
     <div class="col-md-6">
       <div class="price-card">
-        <h3>🃏Настолка "Денежный поток"🃏</h3>
+        <h3>♣ Настолка "Денежный поток" ♣</h3>
         <div class="price-amount">
           2000
         </div>
@@ -271,7 +281,7 @@
   <div class="row mt-4">
     <div class="col-md-12">
       <div class="price-card">
-        <h3> 🂱 Вечер настольных игр  🂱</h3>
+        <h3>♠ Вечер настольных игр ♠</h3>
         <div class="price-amount">
           500 <span>₽</span>
         </div>
@@ -292,13 +302,13 @@
     <div class="row justify-content-center">
       <div class="col-md-4">
         <a href="https://web.telegram.org/k/#@MafiaTsarstvoBot" class="contact-btn w-100">
-          <div class="btn-icon">📱</div>
+          <div class="btn-icon">✉</div>
           <div class="btn-text">Telegram бот</div>
         </a>
       </div>
       <div class="col-md-4">
         <a href="https://web.telegram.org/k/#-3261646428" class="contact-btn w-100">
-          <div class="btn-icon">💬</div>
+          <div class="btn-icon">♦</div>
           <div class="btn-text">Telegram канал</div>
         </a>
       </div>
