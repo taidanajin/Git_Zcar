@@ -248,6 +248,10 @@ def rating():
 def prices():
     return render_template("prices.html")
 
+@app.route('/FAQ')
+def FAQ():
+    return render_template("FAQ.html")
+
 @app.route('/rule')
 def rule():
     return render_template("rule.html")

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+FAQ - Клуб "Царь"
+{% endblock %}
+
+{% block main %}
+<style>
+  .rules-header {
+    text-align: center;
+    margin: 40px 0;
+  }
+
+  .rules-header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2.5em;
+    color: var(--text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .rules-header::before {
+    content: '⚔';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #D4AF37;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+  }
+
+  .rule-section {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .rule-section h2 {
+    color: #D4AF37;
+    font-family: 'Georgia', serif;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #D4AF37;
+    padding-bottom: 10px;
+  }
+
+  .rule-section h3 {
+    color: var(--text-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .rule-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .rule-section ul li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+  }
+
+  .rule-section ul li::before {
+    content: '▸';
+    color: #D4AF37;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+</style>
+
+<div class="container">
+  <div class="rules-header">
+    <h1>Часто задаваемые вопросы(FAQ)</h1>
+    <p style="color: #D4AF37; font-style: italic;">Вопрос-ответ</p>
+  </div>
+
+  <div class="rule-section">
+    <h2>♠ Мафия?</h2>
+
+    <h3>Можно ли говорить ночью?</h3>
+    <p>Нет, нельзя! Будет играть музыка для атмосферы и немного путаницы.</p>
+
+    <h3>Ночью услышал шорох от соседа! Значит он Мафия?</h3>
+    <p>Нет, это не признак. Мы включаем музыку и кто-то может подтанцовывать, или просто ворочиться на месте.</p>
+
+    <h3>Я знаю моего друга как 5 пальцев! Он мафия!</h3>
+    <p>Да возможно, но учитывайте, что это может быть обманка специально для вас!.</p>
+
+    <h3>А можно ли врать в игре?</h3>
+    <p>Конечно же да! Это же прикол игры! Обманывать всех, что вы та или иная роль!.</p>
+  </div>
+
+  <div class="rule-section">
+    <h2>♥ Обсуждения</h2>
+
+    <h3>Он упомянул меня, я могу вставить свои 5 копеек?</h3>
+    <p>Если он разрешит потратить своё время, которое ограниченное, то можно!</p>
+
+    <h3>Он нагло врёт!</h3>
+    <p>Говори в своё время! Или в чужое.(это как получится)</p>
+
+    <h3>Мжет ли мирный врать?</h3>
+    <p>Да, но смысла от этого 0. Мирные должны найти правду, а мафия её скрывает.</p>
+  </div>
+
+  <div class="rule-section">
+    <h2>♣ Тех сторона</h2>
+
+    <h3>Почему так редко мафия?</h3>
+    <p>А у дел что-ли других нет? У нас Владелец - это ведущий! Ясень пень мы не часто будем проводить...</p>
+
+    <h3>Что такое денежный поток?</h3>
+    <p>Это игра от Роберта Кийосаки. Это монополия, только более похожа на реальную жизнь</p>
+
+    <h3>Не густо у вас по технической части...</h3>
+    <p>Я один...</p>
+  </div>
+
+</div>
+{% endblock %}
