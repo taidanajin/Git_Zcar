@@ -26,7 +26,7 @@ https://docs.google.com/presentation/d/1AwqtwztBo9svFZsOnvFhLmuW4j-A-ADNXJJw_Cli
 | `/prices` | Цены |
 | `/rule` | Правила игры |
 | `/join` | Вход для администраторов |
-
+| `/FAQ` | Часто задаваемые вопросы |
 ---
 
 ## Быстрый старт
